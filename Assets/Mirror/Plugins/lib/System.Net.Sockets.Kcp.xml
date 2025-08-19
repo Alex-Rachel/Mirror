@@ -1,52 +1,52 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Kcp-CSharp</name>
+        <name>System.Net.Sockets.Kcp</name>
     </assembly>
     <members>
-        <member name="T:kcp.KCP">
+        <member name="T:System.Net.Sockets.Kcp.KCP">
             <summary>
                 https://github.com/skywind3000/kcp
             </summary>
         </member>
-        <member name="T:kcp.KcpCallback">
+        <member name="T:System.Net.Sockets.Kcp.KcpCallback">
             <summary>
                 Kcp callback
             </summary>
             <param name="buffer">KCP output destination</param>
             <param name="length">KCP output size (excluding reserved)</param>
         </member>
-        <member name="T:kcp.Kcp">
+        <member name="T:System.Net.Sockets.Kcp.Kcp">
             <summary>
                 Kcp
             </summary>
         </member>
-        <member name="F:kcp.Kcp._kcp">
+        <member name="F:System.Net.Sockets.Kcp.Kcp._kcp">
             <summary>
                 Kcp
             </summary>
         </member>
-        <member name="F:kcp.Kcp._output">
+        <member name="F:System.Net.Sockets.Kcp.Kcp._output">
             <summary>
                 Output function
             </summary>
         </member>
-        <member name="F:kcp.Kcp._buffer">
+        <member name="F:System.Net.Sockets.Kcp.Kcp._buffer">
             <summary>
                 Buffer
             </summary>
         </member>
-        <member name="F:kcp.Kcp._reserved">
+        <member name="F:System.Net.Sockets.Kcp.Kcp._reserved">
             <summary>
                 Reserved overhead
             </summary>
         </member>
-        <member name="F:kcp.Kcp._disposed">
+        <member name="F:System.Net.Sockets.Kcp.Kcp._disposed">
             <summary>
                 Disposed
             </summary>
         </member>
-        <member name="M:kcp.Kcp.#ctor(System.UInt32,kcp.KcpCallback,System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.#ctor(System.UInt32,System.Net.Sockets.Kcp.KcpCallback,System.Int32)">
             <summary>
                 Structure
             </summary>
@@ -54,255 +54,255 @@
             <param name="output">Output</param>
             <param name="reserved">Reserved overhead</param>
         </member>
-        <member name="P:kcp.Kcp.IsSet">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.IsSet">
             <summary>
                 Set
             </summary>
         </member>
-        <member name="P:kcp.Kcp.ConversationId">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.ConversationId">
             <summary>
                 Conversation id
             </summary>
         </member>
-        <member name="P:kcp.Kcp.MaximumTransmissionUnit">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.MaximumTransmissionUnit">
             <summary>
                 Maximum transmission unit
             </summary>
         </member>
-        <member name="P:kcp.Kcp.MaximumSegmentSize">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.MaximumSegmentSize">
             <summary>
                 Maximum segment size
             </summary>
         </member>
-        <member name="P:kcp.Kcp.State">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.State">
             <summary>
                 Connection state
             </summary>
         </member>
-        <member name="P:kcp.Kcp.SendUna">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.SendUna">
             <summary>
                 The sequence number of the first unacknowledged packet
             </summary>
         </member>
-        <member name="P:kcp.Kcp.SendNext">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.SendNext">
             <summary>
                 The sequence number for the next packet to be sent
             </summary>
         </member>
-        <member name="P:kcp.Kcp.ReceiveNext">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.ReceiveNext">
             <summary>
                 The sequence number for the next packet expected to be received
             </summary>
         </member>
-        <member name="P:kcp.Kcp.SlowStartThreshold">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.SlowStartThreshold">
             <summary>
                 Slow start threshold for congestion control
             </summary>
         </member>
-        <member name="P:kcp.Kcp.RxRttval">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.RxRttval">
             <summary>
                 Round-trip time variance
             </summary>
         </member>
-        <member name="P:kcp.Kcp.RxSrtt">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.RxSrtt">
             <summary>
                 Smoothed round-trip time
             </summary>
         </member>
-        <member name="P:kcp.Kcp.RxRto">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.RxRto">
             <summary>
                 Retransmission timeout
             </summary>
         </member>
-        <member name="P:kcp.Kcp.RxMinrto">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.RxMinrto">
             <summary>
                 Minimum retransmission timeout
             </summary>
         </member>
-        <member name="P:kcp.Kcp.SendWindowSize">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.SendWindowSize">
             <summary>
                 Send window size
             </summary>
         </member>
-        <member name="P:kcp.Kcp.ReceiveWindowSize">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.ReceiveWindowSize">
             <summary>
                 Receive window size
             </summary>
         </member>
-        <member name="P:kcp.Kcp.RemoteWindowSize">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.RemoteWindowSize">
             <summary>
                 Remote window size
             </summary>
         </member>
-        <member name="P:kcp.Kcp.CongestionWindowSize">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.CongestionWindowSize">
             <summary>
                 Congestion window size
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Probe">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Probe">
             <summary>
                 Probe variable for fast recovery
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Current">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Current">
             <summary>
                 Current timestamp
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Interval">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Interval">
             <summary>
                 Flush interval
             </summary>
         </member>
-        <member name="P:kcp.Kcp.TimestampFlush">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.TimestampFlush">
             <summary>
                 Timestamp for the next flush
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Transmissions">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Transmissions">
             <summary>
                 Number of retransmissions
             </summary>
         </member>
-        <member name="P:kcp.Kcp.ReceiveBufferCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.ReceiveBufferCount">
             <summary>
                 Number of packets in the receive buffer
             </summary>
         </member>
-        <member name="P:kcp.Kcp.ReceiveQueueCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.ReceiveQueueCount">
             <summary>
                 Number of packets in the receive queue
             </summary>
         </member>
-        <member name="P:kcp.Kcp.WaitReceiveCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.WaitReceiveCount">
             <summary>
                 Number of packets wait to receive
             </summary>
         </member>
-        <member name="P:kcp.Kcp.SendBufferCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.SendBufferCount">
             <summary>
                 Number of packets in the send buffer
             </summary>
         </member>
-        <member name="P:kcp.Kcp.SendQueueCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.SendQueueCount">
             <summary>
                 Number of packets in the send queue
             </summary>
         </member>
-        <member name="P:kcp.Kcp.WaitSendCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.WaitSendCount">
             <summary>
                 Number of packets wait to send
             </summary>
         </member>
-        <member name="P:kcp.Kcp.NoDelay">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.NoDelay">
             <summary>
                 Whether Nagle's algorithm is disabled
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Updated">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Updated">
             <summary>
                 Whether the KCP connection has been updated
             </summary>
         </member>
-        <member name="P:kcp.Kcp.TimestampProbe">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.TimestampProbe">
             <summary>
                 Timestamp for the next probe
             </summary>
         </member>
-        <member name="P:kcp.Kcp.ProbeWait">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.ProbeWait">
             <summary>
                 Probe wait time
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Increment">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Increment">
             <summary>
                 Incremental increase
             </summary>
         </member>
-        <member name="P:kcp.Kcp.AckList">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.AckList">
             <summary>
                 Pointer to the acknowledge list
             </summary>
         </member>
-        <member name="P:kcp.Kcp.AckCount">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.AckCount">
             <summary>
                 Count of acknowledges
             </summary>
         </member>
-        <member name="P:kcp.Kcp.AckBlock">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.AckBlock">
             <summary>
                 Number of acknowledge blocks
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Buffer">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Buffer">
             <summary>
                 Buffer
             </summary>
         </member>
-        <member name="P:kcp.Kcp.FastResend">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.FastResend">
             <summary>
                 Fast resend trigger count
             </summary>
         </member>
-        <member name="P:kcp.Kcp.FastResendLimit">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.FastResendLimit">
             <summary>
                 Fast resend limit
             </summary>
         </member>
-        <member name="P:kcp.Kcp.NoCongestionWindow">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.NoCongestionWindow">
             <summary>
                 Whether congestion control is disabled
             </summary>
         </member>
-        <member name="P:kcp.Kcp.StreamMode">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.StreamMode">
             <summary>
                 Whether stream mode is enabled
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Output">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Output">
             <summary>
                 Output function pointer
             </summary>
         </member>
-        <member name="P:kcp.Kcp.Reserved">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.Reserved">
             <summary>
                 Reserved overhead
             </summary>
         </member>
-        <member name="P:kcp.Kcp.DeadLink">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.DeadLink">
             <summary>
                 Whether the connection is dead
             </summary>
         </member>
-        <member name="P:kcp.Kcp.IsDeadLink">
+        <member name="P:System.Net.Sockets.Kcp.Kcp.IsDeadLink">
             <summary>
                  Whether the connection is dead
             </summary>
         </member>
-        <member name="M:kcp.Kcp.Dispose">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Dispose">
             <summary>
                 Dispose
             </summary>
         </member>
-        <member name="M:kcp.Kcp.SetOutput(kcp.KcpCallback)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetOutput(System.Net.Sockets.Kcp.KcpCallback)">
             <summary>
                 Set output
             </summary>
             <param name="output">Output</param>
         </member>
-        <member name="M:kcp.Kcp.Finalize">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Finalize">
             <summary>
                 Destructure
             </summary>
         </member>
-        <member name="M:kcp.Kcp.Send(System.ReadOnlySpan{System.Byte})">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Send(System.ReadOnlySpan{System.Byte})">
             <summary>
                 Send
             </summary>
             <param name="buffer">Buffer</param>
             <returns>Sent bytes</returns>
         </member>
-        <member name="M:kcp.Kcp.Send(System.Byte*,System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Send(System.Byte*,System.Int32)">
             <summary>
                 Send
             </summary>
@@ -310,14 +310,14 @@
             <param name="length">Length</param>
             <returns>Sent bytes</returns>
         </member>
-        <member name="M:kcp.Kcp.Input(System.ReadOnlySpan{System.Byte})">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Input(System.ReadOnlySpan{System.Byte})">
             <summary>
                 Input
             </summary>
             <param name="buffer">Buffer</param>
             <returns>Input bytes</returns>
         </member>
-        <member name="M:kcp.Kcp.Input(System.Byte*,System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Input(System.Byte*,System.Int32)">
             <summary>
                 Input
             </summary>
@@ -325,20 +325,20 @@
             <param name="length">Length</param>
             <returns>Input bytes</returns>
         </member>
-        <member name="M:kcp.Kcp.PeekSize">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.PeekSize">
             <summary>
                 Peek size
             </summary>
             <returns>Peeked size</returns>
         </member>
-        <member name="M:kcp.Kcp.Receive(System.Span{System.Byte})">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Receive(System.Span{System.Byte})">
             <summary>
                 Receive
             </summary>
             <param name="buffer">Buffer</param>
             <returns>Received bytes</returns>
         </member>
-        <member name="M:kcp.Kcp.Receive(System.Byte*,System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Receive(System.Byte*,System.Int32)">
             <summary>
                 Receive
             </summary>
@@ -346,38 +346,38 @@
             <param name="length">Length</param>
             <returns>Received bytes</returns>
         </member>
-        <member name="M:kcp.Kcp.Update(System.UInt32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Update(System.UInt32)">
             <summary>
                 Update
             </summary>
             <param name="current">Timestamp</param>
         </member>
-        <member name="M:kcp.Kcp.Check(System.UInt32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Check(System.UInt32)">
             <summary>
                 Check
             </summary>
             <param name="current">Timestamp</param>
             <returns>Next flush timestamp</returns>
         </member>
-        <member name="M:kcp.Kcp.Flush">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.Flush">
             <summary>
                 Flush
             </summary>
         </member>
-        <member name="M:kcp.Kcp.SetMtu(System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetMtu(System.Int32)">
             <summary>
                 Set maximum transmission unit
             </summary>
             <param name="mtu">Maximum transmission unit</param>
             <returns>Set</returns>
         </member>
-        <member name="M:kcp.Kcp.SetInterval(System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetInterval(System.Int32)">
             <summary>
                 Set flush interval
             </summary>
             <param name="interval">Flush interval</param>
         </member>
-        <member name="M:kcp.Kcp.SetNoDelay(System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetNoDelay(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
                 Set no delay
             </summary>
@@ -386,38 +386,38 @@
             <param name="resend">Fast resend trigger count</param>
             <param name="nc">No congestion window</param>
         </member>
-        <member name="M:kcp.Kcp.SetWindowSize(System.Int32,System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetWindowSize(System.Int32,System.Int32)">
             <summary>
                 Set window size
             </summary>
             <param name="sndwnd">Send window size</param>
             <param name="rcvwnd">Receive window size</param>
         </member>
-        <member name="M:kcp.Kcp.SetFastResendLimit(System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetFastResendLimit(System.Int32)">
             <summary>
                 Set fast resend limit
             </summary>
             <param name="fastlimit">Fast resend limit</param>
         </member>
-        <member name="M:kcp.Kcp.SetStreamMode(System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetStreamMode(System.Int32)">
             <summary>
                 Set whether stream mode is enabled
             </summary>
             <param name="stream">Whether stream mode is enabled</param>
         </member>
-        <member name="M:kcp.Kcp.SetMinrto(System.Int32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetMinrto(System.Int32)">
             <summary>
                 Set minimum retransmission timeout
             </summary>
             <param name="minrto">Minimum retransmission timeout</param>
         </member>
-        <member name="M:kcp.Kcp.SetDeadLink(System.UInt32)">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.SetDeadLink(System.UInt32)">
             <summary>
                 Set Dead Link
             </summary>
             <param name="deadlink">DeadLink</param>
         </member>
-        <member name="M:kcp.Kcp.ClearSendQueue">
+        <member name="M:System.Net.Sockets.Kcp.Kcp.ClearSendQueue">
             <summary>
             ClearSendQueue
             </summary>

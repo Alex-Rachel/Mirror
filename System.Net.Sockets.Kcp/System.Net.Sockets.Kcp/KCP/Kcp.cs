@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using kcp;
-using static kcp.KCP;
+using static System.Net.Sockets.Kcp.KCP;
 
 #pragma warning disable CS8601
 #pragma warning disable CS8602
@@ -10,7 +9,7 @@ using static kcp.KCP;
 
 // ReSharper disable ALL
 
-namespace kcp
+namespace System.Net.Sockets.Kcp
 {
     /// <summary>
     ///     Kcp callback

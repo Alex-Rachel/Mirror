@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets.Kcp;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -43,7 +44,7 @@ namespace kcp2k
         [Tooltip("KCP window size can be modified to support higher loads.")]
         public uint SendWindowSize = 4096; //Kcp.WND_SND; 32 by default. Mirror sends a lot, so we need a lot more.
         [Tooltip("KCP will try to retransmit lost messages up to MaxRetransmit (aka dead_link) before disconnecting.")]
-        public uint MaxRetransmit = kcp.KCP.IKCP_DEADLINK * 2; // default prematurely disconnects a lot of people (#3022). use 2x.
+        public uint MaxRetransmit = KCP.IKCP_DEADLINK * 2; // default prematurely disconnects a lot of people (#3022). use 2x.
         [Tooltip("Enable to automatically set client & server send/recv buffers to OS limit. Avoids issues with too small buffers under heavy load, potentially dropping connections. Increase the OS limit if this is still too small.")]
         [FormerlySerializedAs("MaximizeSendReceiveBuffersToOSLimit")]
         public bool MaximizeSocketBuffers = true;
@@ -60,7 +61,7 @@ namespace kcp2k
         protected KcpConfig config;
 
         // use default MTU for this transport.
-        const int MTU = (int)kcp.KCP.IKCP_MTU_DEF;
+        const int MTU = (int)KCP.IKCP_MTU_DEF;
 
         // server & client
         protected KcpServer server;

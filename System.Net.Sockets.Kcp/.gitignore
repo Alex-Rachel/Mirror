@@ -39,8 +39,8 @@ bld/
 
 # JetBrains Rider
 .idea/
-Kcp-CSharp.sln.DotSettings
-Kcp-CSharp.sln.DotSettings.user
+System.Net.Sockets.Kcp.sln.DotSettings
+System.Net.Sockets.Kcp.sln.DotSettings.user
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/

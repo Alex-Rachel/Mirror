@@ -7,12 +7,12 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "Kcp-CSharp/1.0.8": {
+      "System.Net.Sockets.Kcp/1.0.8": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
-          "Kcp-CSharp.dll": {}
+          "System.Net.Sockets.Kcp.dll": {}
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
@@ -26,7 +26,7 @@
     }
   },
   "libraries": {
-    "Kcp-CSharp/1.0.8": {
+    "System.Net.Sockets.Kcp/1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

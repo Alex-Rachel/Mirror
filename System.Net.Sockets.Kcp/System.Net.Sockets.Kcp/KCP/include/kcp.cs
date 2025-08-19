@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable ALL
 
-namespace kcp
+namespace System.Net.Sockets.Kcp
 {
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct IQUEUEHEAD

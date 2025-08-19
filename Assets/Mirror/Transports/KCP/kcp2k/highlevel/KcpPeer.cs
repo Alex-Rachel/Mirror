@@ -5,7 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.Net.Sockets;
-using kcp;
+using System.Net.Sockets.Kcp;
 
 namespace kcp2k
 {

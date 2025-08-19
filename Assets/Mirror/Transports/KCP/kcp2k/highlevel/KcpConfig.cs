@@ -1,5 +1,6 @@
 // common config struct, instead of passing 10 parameters manually every time.
 using System;
+using System.Net.Sockets.Kcp;
 
 namespace kcp2k
 {
@@ -70,15 +71,15 @@ namespace kcp2k
             bool DualMode          = true,
             int RecvBufferSize     = 1024 * 1024 * 7,
             int SendBufferSize     = 1024 * 1024 * 7,
-            int Mtu                = (int)kcp.KCP.IKCP_MTU_DEF,
+            int Mtu                = (int)KCP.IKCP_MTU_DEF,
             bool NoDelay           = true,
             uint Interval          = 10,
             int FastResend         = 0,
             bool CongestionWindow  = false,
-            uint SendWindowSize    = kcp.KCP.IKCP_WND_SND,
-            uint ReceiveWindowSize = kcp.KCP.IKCP_WND_RCV,
+            uint SendWindowSize    = KCP.IKCP_WND_SND,
+            uint ReceiveWindowSize = KCP.IKCP_WND_RCV,
             int Timeout            = KcpPeer.DEFAULT_TIMEOUT,
-            uint MaxRetransmits    = kcp.KCP.IKCP_DEADLINK)
+            uint MaxRetransmits    = KCP.IKCP_DEADLINK)
         {
             this.DualMode = DualMode;
             this.RecvBufferSize = RecvBufferSize;
