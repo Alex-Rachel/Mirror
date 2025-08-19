@@ -3,6 +3,7 @@
 
 //#if MIRROR <- commented out because MIRROR isn't defined on first import yet
 using System;
+using System.Net.Sockets.Kcp;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Mirror;
@@ -19,7 +20,7 @@ namespace Edgegap
         public ushort relayGameClientPort = 9999;
 
         // mtu for kcp transport. respects relay overhead.
-        public const int MaxPayload = (int)kcp.KCP.IKCP_MTU_DEF - Protocol.Overhead;
+        public const int MaxPayload = (int)KCP.IKCP_MTU_DEF - Protocol.Overhead;
 
         [Header("Relay")]
         public bool relayGUI = true;
