@@ -48,11 +48,10 @@ namespace Mirror.RemoteCalls
 
         static bool CheckIfDelegateExists(Type componentType, RemoteCallType remoteCallType, RemoteCallDelegate func, ushort functionHash)
         {
-            if (remoteCallDelegates.ContainsKey(functionHash))
+            if (remoteCallDelegates.TryGetValue(functionHash, out Invoker oldInvoker))
             {
                 // something already registered this hash.
                 // it's okay if it was the same function.
-                Invoker oldInvoker = remoteCallDelegates[functionHash];
                 if (oldInvoker.AreEqual(componentType, remoteCallType, func))
                 {
                     return true;
