@@ -19,7 +19,7 @@ namespace Edgegap
         public ushort relayGameClientPort = 9999;
 
         // mtu for kcp transport. respects relay overhead.
-        public const int MaxPayload = Kcp.MTU_DEF - Protocol.Overhead;
+        public const int MaxPayload = (int)kcp.KCP.IKCP_MTU_DEF - Protocol.Overhead;
 
         [Header("Relay")]
         public bool relayGUI = true;

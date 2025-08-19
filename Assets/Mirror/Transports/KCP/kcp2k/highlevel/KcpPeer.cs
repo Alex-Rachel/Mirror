@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.Net.Sockets;
+using kcp;
 
 namespace kcp2k
 {
@@ -73,10 +74,10 @@ namespace kcp2k
         internal const int QueueDisconnectThreshold = 10000;
 
         // getters for queue and buffer counts, used for debug info
-        public int SendQueueCount     => kcp.snd_queue.Count;
-        public int ReceiveQueueCount  => kcp.rcv_queue.Count;
-        public int SendBufferCount    => kcp.snd_buf.Count;
-        public int ReceiveBufferCount => kcp.rcv_buf.Count;
+        public int SendQueueCount     => (int)kcp.SendQueueCount;
+        public int ReceiveQueueCount  => (int)kcp.ReceiveQueueCount;
+        public int SendBufferCount    => (int)kcp.SendBufferCount;
+        public int ReceiveBufferCount => (int)kcp.ReceiveBufferCount;
 
         // we need to subtract the channel and cookie bytes from every
         // MaxMessageSize calculation.
@@ -108,7 +109,7 @@ namespace kcp2k
         //            => sending UNRELIABLE max message size most of the time is
         //               best for performance (use that one for batching!)
         static int ReliableMaxMessageSize_Unconstrained(int mtu, uint rcv_wnd) =>
-            (mtu - Kcp.OVERHEAD - METADATA_SIZE) * ((int)rcv_wnd - 1) - 1;
+            (mtu - (int)KCP.IKCP_OVERHEAD - METADATA_SIZE) * ((int)rcv_wnd - 1) - 1;
 
         // kcp encodes 'frg' as 1 byte.
         // max message size can only ever allow up to 255 fragments.
@@ -116,7 +117,7 @@ namespace kcp2k
         //   WND_RCV * 2 gives 255 fragments.
         // so we can limit max message size by limiting rcv_wnd parameter.
         public static int ReliableMaxMessageSize(int mtu, uint rcv_wnd) =>
-            ReliableMaxMessageSize_Unconstrained(mtu, Math.Min(rcv_wnd, Kcp.FRG_MAX));
+            ReliableMaxMessageSize_Unconstrained(mtu, Math.Min(rcv_wnd, KCP.IKCP_FRG_MAX));
 
         // unreliable max message size is simply MTU - channel header - kcp header
         public static int UnreliableMaxMessageSize(int mtu) =>
@@ -133,8 +134,8 @@ namespace kcp2k
         //   => 43.75KB * 1000 / INTERVAL(10) = 4375KB/s
         //
         // returns bytes/second!
-        public uint MaxSendRate    => kcp.snd_wnd * kcp.mtu * 1000 / kcp.interval;
-        public uint MaxReceiveRate => kcp.rcv_wnd * kcp.mtu * 1000 / kcp.interval;
+        public uint MaxSendRate    => kcp.SendWindowSize * kcp.MaximumTransmissionUnit * 1000 / kcp.Interval;
+        public uint MaxReceiveRate => kcp.ReceiveWindowSize * kcp.MaximumTransmissionUnit * 1000 / kcp.Interval;
 
         // calculate max message sizes based on mtu and wnd only once
         public readonly int unreliableMax;
@@ -179,22 +180,30 @@ namespace kcp2k
             lastPingTime = 0;
             watch.Restart(); // start at 0 each time
 
-            // set up kcp over reliable channel (that's what kcp is for)
-            kcp = new Kcp(0, RawSendReliable);
 
-            // set nodelay.
-            // note that kcp uses 'nocwnd' internally so we negate the parameter
-            kcp.SetNoDelay(config.NoDelay ? 1u : 0u, config.Interval, config.FastResend, !config.CongestionWindow);
-            kcp.SetWindowSize(config.SendWindowSize, config.ReceiveWindowSize);
+            kcp = new Kcp(0, RawSendReliable, 0);
+            kcp.SetNoDelay(config.NoDelay ? 1 : 0, (int)config.Interval, config.FastResend, 1);
+            kcp.SetWindowSize((int)config.SendWindowSize, (int)config.ReceiveWindowSize);
+            kcp.SetMtu(config.Mtu - METADATA_SIZE);
+            kcp.SetMinrto(30);
+            kcp.SetDeadLink(config.MaxRetransmits);
 
-            // IMPORTANT: high level needs to add 1 channel byte to each raw
-            // message. so while Kcp.MTU_DEF is perfect, we actually need to
-            // tell kcp to use MTU-1 so we can still put the header into the
-            // message afterwards.
-            kcp.SetMtu((uint)config.Mtu - METADATA_SIZE);
-
-            // set maximum retransmits (aka dead_link)
-            kcp.dead_link = config.MaxRetransmits;
+            // // set up kcp over reliable channel (that's what kcp is for)
+            // kcp = new Kcp(0, RawSendReliable);
+            //
+            // // set nodelay.
+            // // note that kcp uses 'nocwnd' internally so we negate the parameter
+            // kcp.SetNoDelay(config.NoDelay ? 1 : 0, (int)config.Interval, config.FastResend, (uint)!config.CongestionWindow);
+            // kcp.SetWindowSize(config.SendWindowSize, config.ReceiveWindowSize);
+            //
+            // // IMPORTANT: high level needs to add 1 channel byte to each raw
+            // // message. so while Kcp.MTU_DEF is perfect, we actually need to
+            // // tell kcp to use MTU-1 so we can still put the header into the
+            // // message afterwards.
+            // kcp.SetMtu((uint)config.Mtu - METADATA_SIZE);
+            //
+            // // set maximum retransmits (aka dead_link)
+            // kcp.dead_link = config.MaxRetransmits;
             timeout = config.Timeout;
         }
 
@@ -230,11 +239,11 @@ namespace kcp2k
         void HandleDeadLink()
         {
             // kcp has 'dead_link' detection. might as well use it.
-            if (kcp.state == -1)
+            if (kcp.IsDeadLink)
             {
                 // pass error to user callback. no need to log it manually.
                 // GetType() shows Server/ClientConn instead of just Connection.
-                OnError(ErrorCode.Timeout, $"{GetType()}: dead_link detected: a message was retransmitted {kcp.dead_link} times without ack. Disconnecting.");
+                OnError(ErrorCode.Timeout, $"{GetType()}: dead_link detected: a message was retransmitted {kcp.DeadLink} times without ack. Disconnecting.");
                 Disconnect();
             }
         }
@@ -257,15 +266,15 @@ namespace kcp2k
             // disconnect connections that can't process the load.
             // see QueueSizeDisconnect comments.
             // => include all of kcp's buffers and the unreliable queue!
-            int total = kcp.rcv_queue.Count + kcp.snd_queue.Count +
-                        kcp.rcv_buf.Count   + kcp.snd_buf.Count;
+            uint total = kcp.ReceiveQueueCount + kcp.SendQueueCount +
+                        kcp.ReceiveBufferCount   + kcp.SendBufferCount;
             if (total >= QueueDisconnectThreshold)
             {
                 // pass error to user callback. no need to log it manually.
                 // GetType() shows Server/ClientConn instead of just Connection.
                 OnError(ErrorCode.Congestion,
                         $"{GetType()}: disconnecting connection because it can't process data fast enough.\n" +
-                        $"Queue total {total}>{QueueDisconnectThreshold}. rcv_queue={kcp.rcv_queue.Count} snd_queue={kcp.snd_queue.Count} rcv_buf={kcp.rcv_buf.Count} snd_buf={kcp.snd_buf.Count}\n" +
+                        $"Queue total {total}>{QueueDisconnectThreshold}. rcv_queue={kcp.ReceiveQueueCount} snd_queue={kcp.SendQueueCount} rcv_buf={kcp.ReceiveBufferCount} snd_buf={kcp.SendBufferCount}\n" +
                         $"* Try to Enable NoDelay, decrease INTERVAL, disable Congestion Window (= enable NOCWND!), increase SEND/RECV WINDOW or compress data.\n" +
                         $"* Or perhaps the network is simply too slow on our end, or on the other end.");
 
@@ -273,7 +282,7 @@ namespace kcp2k
                 // otherwise a single Flush in Disconnect() won't be enough to
                 // flush thousands of messages to finally deliver 'Bye'.
                 // this is just faster and more robust.
-                kcp.snd_queue.Clear();
+                kcp.ClearSendQueue();
 
                 Disconnect();
             }
@@ -302,7 +311,7 @@ namespace kcp2k
             }
 
             // receive from kcp
-            int received = kcp.Receive(kcpMessageBuffer, msgSize);
+            int received = kcp.Receive(kcpMessageBuffer.AsSpan(0,msgSize));
             if (received < 0)
             {
                 // if receive failed, close everything
@@ -524,7 +533,7 @@ namespace kcp2k
         protected void OnRawInputReliable(ArraySegment<byte> message)
         {
             // input into kcp, but skip channel byte
-            int input = kcp.Input(message.Array, message.Offset, message.Count);
+            int input = kcp.Input(message.AsSpan(message.Offset, message.Count));
             if (input != 0)
             {
                 // GetType() shows Server/ClientConn instead of just Connection.
@@ -652,7 +661,7 @@ namespace kcp2k
                 Buffer.BlockCopy(content.Array, content.Offset, kcpSendBuffer, 1, content.Count);
 
             // send to kcp for processing
-            int sent = kcp.Send(kcpSendBuffer, 0, 1 + content.Count);
+            int sent = kcp.Send(kcpSendBuffer.AsSpan(0,1 + content.Count));
             if (sent < 0)
             {
                 // GetType() shows Server/ClientConn instead of just Connection.

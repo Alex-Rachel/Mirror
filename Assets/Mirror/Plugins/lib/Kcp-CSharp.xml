@@ -1,0 +1,426 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kcp-CSharp</name>
+    </assembly>
+    <members>
+        <member name="T:kcp.KCP">
+            <summary>
+                https://github.com/skywind3000/kcp
+            </summary>
+        </member>
+        <member name="T:kcp.KcpCallback">
+            <summary>
+                Kcp callback
+            </summary>
+            <param name="buffer">KCP output destination</param>
+            <param name="length">KCP output size (excluding reserved)</param>
+        </member>
+        <member name="T:kcp.Kcp">
+            <summary>
+                Kcp
+            </summary>
+        </member>
+        <member name="F:kcp.Kcp._kcp">
+            <summary>
+                Kcp
+            </summary>
+        </member>
+        <member name="F:kcp.Kcp._output">
+            <summary>
+                Output function
+            </summary>
+        </member>
+        <member name="F:kcp.Kcp._buffer">
+            <summary>
+                Buffer
+            </summary>
+        </member>
+        <member name="F:kcp.Kcp._reserved">
+            <summary>
+                Reserved overhead
+            </summary>
+        </member>
+        <member name="F:kcp.Kcp._disposed">
+            <summary>
+                Disposed
+            </summary>
+        </member>
+        <member name="M:kcp.Kcp.#ctor(System.UInt32,kcp.KcpCallback,System.Int32)">
+            <summary>
+                Structure
+            </summary>
+            <param name="conv">ConversationId</param>
+            <param name="output">Output</param>
+            <param name="reserved">Reserved overhead</param>
+        </member>
+        <member name="P:kcp.Kcp.IsSet">
+            <summary>
+                Set
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.ConversationId">
+            <summary>
+                Conversation id
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.MaximumTransmissionUnit">
+            <summary>
+                Maximum transmission unit
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.MaximumSegmentSize">
+            <summary>
+                Maximum segment size
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.State">
+            <summary>
+                Connection state
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.SendUna">
+            <summary>
+                The sequence number of the first unacknowledged packet
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.SendNext">
+            <summary>
+                The sequence number for the next packet to be sent
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.ReceiveNext">
+            <summary>
+                The sequence number for the next packet expected to be received
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.SlowStartThreshold">
+            <summary>
+                Slow start threshold for congestion control
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.RxRttval">
+            <summary>
+                Round-trip time variance
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.RxSrtt">
+            <summary>
+                Smoothed round-trip time
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.RxRto">
+            <summary>
+                Retransmission timeout
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.RxMinrto">
+            <summary>
+                Minimum retransmission timeout
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.SendWindowSize">
+            <summary>
+                Send window size
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.ReceiveWindowSize">
+            <summary>
+                Receive window size
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.RemoteWindowSize">
+            <summary>
+                Remote window size
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.CongestionWindowSize">
+            <summary>
+                Congestion window size
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Probe">
+            <summary>
+                Probe variable for fast recovery
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Current">
+            <summary>
+                Current timestamp
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Interval">
+            <summary>
+                Flush interval
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.TimestampFlush">
+            <summary>
+                Timestamp for the next flush
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Transmissions">
+            <summary>
+                Number of retransmissions
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.ReceiveBufferCount">
+            <summary>
+                Number of packets in the receive buffer
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.ReceiveQueueCount">
+            <summary>
+                Number of packets in the receive queue
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.WaitReceiveCount">
+            <summary>
+                Number of packets wait to receive
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.SendBufferCount">
+            <summary>
+                Number of packets in the send buffer
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.SendQueueCount">
+            <summary>
+                Number of packets in the send queue
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.WaitSendCount">
+            <summary>
+                Number of packets wait to send
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.NoDelay">
+            <summary>
+                Whether Nagle's algorithm is disabled
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Updated">
+            <summary>
+                Whether the KCP connection has been updated
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.TimestampProbe">
+            <summary>
+                Timestamp for the next probe
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.ProbeWait">
+            <summary>
+                Probe wait time
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Increment">
+            <summary>
+                Incremental increase
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.AckList">
+            <summary>
+                Pointer to the acknowledge list
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.AckCount">
+            <summary>
+                Count of acknowledges
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.AckBlock">
+            <summary>
+                Number of acknowledge blocks
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Buffer">
+            <summary>
+                Buffer
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.FastResend">
+            <summary>
+                Fast resend trigger count
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.FastResendLimit">
+            <summary>
+                Fast resend limit
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.NoCongestionWindow">
+            <summary>
+                Whether congestion control is disabled
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.StreamMode">
+            <summary>
+                Whether stream mode is enabled
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Output">
+            <summary>
+                Output function pointer
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.Reserved">
+            <summary>
+                Reserved overhead
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.DeadLink">
+            <summary>
+                Whether the connection is dead
+            </summary>
+        </member>
+        <member name="P:kcp.Kcp.IsDeadLink">
+            <summary>
+                 Whether the connection is dead
+            </summary>
+        </member>
+        <member name="M:kcp.Kcp.Dispose">
+            <summary>
+                Dispose
+            </summary>
+        </member>
+        <member name="M:kcp.Kcp.SetOutput(kcp.KcpCallback)">
+            <summary>
+                Set output
+            </summary>
+            <param name="output">Output</param>
+        </member>
+        <member name="M:kcp.Kcp.Finalize">
+            <summary>
+                Destructure
+            </summary>
+        </member>
+        <member name="M:kcp.Kcp.Send(System.ReadOnlySpan{System.Byte})">
+            <summary>
+                Send
+            </summary>
+            <param name="buffer">Buffer</param>
+            <returns>Sent bytes</returns>
+        </member>
+        <member name="M:kcp.Kcp.Send(System.Byte*,System.Int32)">
+            <summary>
+                Send
+            </summary>
+            <param name="buffer">Buffer</param>
+            <param name="length">Length</param>
+            <returns>Sent bytes</returns>
+        </member>
+        <member name="M:kcp.Kcp.Input(System.ReadOnlySpan{System.Byte})">
+            <summary>
+                Input
+            </summary>
+            <param name="buffer">Buffer</param>
+            <returns>Input bytes</returns>
+        </member>
+        <member name="M:kcp.Kcp.Input(System.Byte*,System.Int32)">
+            <summary>
+                Input
+            </summary>
+            <param name="buffer">Buffer</param>
+            <param name="length">Length</param>
+            <returns>Input bytes</returns>
+        </member>
+        <member name="M:kcp.Kcp.PeekSize">
+            <summary>
+                Peek size
+            </summary>
+            <returns>Peeked size</returns>
+        </member>
+        <member name="M:kcp.Kcp.Receive(System.Span{System.Byte})">
+            <summary>
+                Receive
+            </summary>
+            <param name="buffer">Buffer</param>
+            <returns>Received bytes</returns>
+        </member>
+        <member name="M:kcp.Kcp.Receive(System.Byte*,System.Int32)">
+            <summary>
+                Receive
+            </summary>
+            <param name="buffer">Buffer</param>
+            <param name="length">Length</param>
+            <returns>Received bytes</returns>
+        </member>
+        <member name="M:kcp.Kcp.Update(System.UInt32)">
+            <summary>
+                Update
+            </summary>
+            <param name="current">Timestamp</param>
+        </member>
+        <member name="M:kcp.Kcp.Check(System.UInt32)">
+            <summary>
+                Check
+            </summary>
+            <param name="current">Timestamp</param>
+            <returns>Next flush timestamp</returns>
+        </member>
+        <member name="M:kcp.Kcp.Flush">
+            <summary>
+                Flush
+            </summary>
+        </member>
+        <member name="M:kcp.Kcp.SetMtu(System.Int32)">
+            <summary>
+                Set maximum transmission unit
+            </summary>
+            <param name="mtu">Maximum transmission unit</param>
+            <returns>Set</returns>
+        </member>
+        <member name="M:kcp.Kcp.SetInterval(System.Int32)">
+            <summary>
+                Set flush interval
+            </summary>
+            <param name="interval">Flush interval</param>
+        </member>
+        <member name="M:kcp.Kcp.SetNoDelay(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Set no delay
+            </summary>
+            <param name="nodelay">Whether Nagle's algorithm is disabled</param>
+            <param name="interval">Flush interval</param>
+            <param name="resend">Fast resend trigger count</param>
+            <param name="nc">No congestion window</param>
+        </member>
+        <member name="M:kcp.Kcp.SetWindowSize(System.Int32,System.Int32)">
+            <summary>
+                Set window size
+            </summary>
+            <param name="sndwnd">Send window size</param>
+            <param name="rcvwnd">Receive window size</param>
+        </member>
+        <member name="M:kcp.Kcp.SetFastResendLimit(System.Int32)">
+            <summary>
+                Set fast resend limit
+            </summary>
+            <param name="fastlimit">Fast resend limit</param>
+        </member>
+        <member name="M:kcp.Kcp.SetStreamMode(System.Int32)">
+            <summary>
+                Set whether stream mode is enabled
+            </summary>
+            <param name="stream">Whether stream mode is enabled</param>
+        </member>
+        <member name="M:kcp.Kcp.SetMinrto(System.Int32)">
+            <summary>
+                Set minimum retransmission timeout
+            </summary>
+            <param name="minrto">Minimum retransmission timeout</param>
+        </member>
+        <member name="M:kcp.Kcp.SetDeadLink(System.UInt32)">
+            <summary>
+                Set Dead Link
+            </summary>
+            <param name="deadlink">DeadLink</param>
+        </member>
+        <member name="M:kcp.Kcp.ClearSendQueue">
+            <summary>
+            ClearSendQueue
+            </summary>
+        </member>
+    </members>
+</doc>
