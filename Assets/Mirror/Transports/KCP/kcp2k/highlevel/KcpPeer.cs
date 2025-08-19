@@ -532,8 +532,9 @@ namespace kcp2k
 
         protected void OnRawInputReliable(ArraySegment<byte> message)
         {
+            var buffer = message.Array.AsSpan(message.Offset, message.Count);
             // input into kcp, but skip channel byte
-            int input = kcp.Input(message.AsSpan(message.Offset, message.Count));
+            int input = kcp.Input(buffer);
             if (input != 0)
             {
                 // GetType() shows Server/ClientConn instead of just Connection.
