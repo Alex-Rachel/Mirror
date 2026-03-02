@@ -8,6 +8,9 @@ namespace Mirror.SimpleWeb
 {
     [DisallowMultipleComponent]
     [HelpURL("https://mirror-networking.gitbook.io/docs/manual/transports/websockets-transport")]
+#if !UNITY_2022_3_OR_NEWER
+    [Obsolete("SimpleWebTransport is not supported for this version of Unity.\nPlease upgrade to Unity 2022.3 LTS or newer for WebGL projects.", true)]
+#endif
     public class SimpleWebTransport : Transport, PortTransport
     {
         public const string NormalScheme = "ws";
@@ -234,8 +237,9 @@ namespace Mirror.SimpleWeb
 
         public override void ClientDisconnect()
         {
-            // don't set client null here of messages wont be processed
-            client?.Disconnect();
+            // don't set client null here or messages wont be processed
+            if (client != null && client.ConnectionState != ClientState.NotConnected)
+                client.Disconnect();
         }
 
         public override void ClientSend(ArraySegment<byte> segment, int channelId)
@@ -276,16 +280,7 @@ namespace Mirror.SimpleWeb
 
         string GetServerScheme() => sslEnabled ? SecureScheme : NormalScheme;
 
-        public override Uri ServerUri()
-        {
-            UriBuilder builder = new UriBuilder
-            {
-                Scheme = GetServerScheme(),
-                Host = Dns.GetHostName(),
-                Port = port
-            };
-            return builder.Uri;
-        }
+        public override Uri ServerUri() => TryBuildValidUri(GetServerScheme(), Dns.GetHostName(), port);
 
         public override bool ServerActive()
         {
