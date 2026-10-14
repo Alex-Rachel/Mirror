@@ -13,37 +13,36 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      # - name: Setup .NET
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '8.0.x'
-  
       - name: Install dotnet-script
         run: |
           dotnet tool install -g dotnet-script
           dotnet script --version
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '*'
 
-      - name: Install conventional-changelog-conventionalcommits
-        run: npm i -D conventional-changelog-conventionalcommits
+      # - name: Install conventional-changelog-conventionalcommits
+      #   run: npm i -D conventional-changelog-conventionalcommits
 
-      - name: Install semantic-release fork
-        run: npm install --save-dev github:MrGadget1024/semantic-release
+      # - name: Install semantic-release fork
+      #   run: npm install --save-dev github:MrGadget1024/semantic-release
 
-      - name: Install Plugins
-        run: npm i -D @semantic-release/exec --legacy-peer-deps
+      # - name: Install Plugins
+      #   run: npm i -D @semantic-release/exec
 
       - name: Release
-        run: npx semantic-release
-          --debug
+        run: >
+          npx
+          --package semantic-release@25
+          --package @semantic-release/exec@7
+          --package conventional-changelog-conventionalcommits@9
+          semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UNITYPACK_OUTPUT: "Mirror.unitypackage"

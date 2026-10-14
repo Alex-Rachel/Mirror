@@ -354,52 +354,67 @@ namespace Mirror
                 //       would only be processed when OnTransportData is called
                 //       the next time.
                 //       => consider moving processing to NetworkEarlyUpdate.
-                while (!isLoadingScene &&
-                       unbatcher.GetNextMessage(out ArraySegment<byte> message, out double remoteTimestamp))
+                //
+                // GetNextMessage may throw for malformed batches
+                // (invalid varint, message size > remaining bytes).
+                // catch and disconnect to prevent queue growth attacks.
+                try
                 {
-                    using (NetworkReaderPooled reader = NetworkReaderPool.Get(message))
+                    while (!isLoadingScene &&
+                           unbatcher.GetNextMessage(out ArraySegment<byte> message, out double remoteTimestamp))
                     {
-                        // enough to read at least header size?
-                        if (reader.Remaining >= NetworkMessages.IdSize)
+                        using (NetworkReaderPooled reader = NetworkReaderPool.Get(message))
                         {
-                            // make remoteTimeStamp available to the user
-                            connection.remoteTimeStamp = remoteTimestamp;
-
-                            // handle message
-                            if (!UnpackAndInvoke(reader, channelId))
+                            // enough to read at least header size?
+                            if (reader.Remaining >= NetworkMessages.IdSize)
                             {
-                                // warn, disconnect and return if failed
-                                // -> warning because attackers might send random data
-                                // -> messages in a batch aren't length prefixed.
-                                //    failing to read one would cause undefined
-                                //    behaviour for every message afterwards.
-                                //    so we need to disconnect.
-                                // -> return to avoid the below unbatches.count error.
-                                //    we already disconnected and handled it.
+                                // make remoteTimeStamp available to the user
+                                connection.remoteTimeStamp = remoteTimestamp;
+
+                                // handle message
+                                if (!UnpackAndInvoke(reader, channelId))
+                                {
+                                    // warn, disconnect and return if failed
+                                    // -> warning because attackers might send random data
+                                    // -> messages in a batch aren't length prefixed.
+                                    //    failing to read one would cause undefined
+                                    //    behaviour for every message afterwards.
+                                    //    so we need to disconnect.
+                                    // -> return to avoid the below unbatches.count error.
+                                    //    we already disconnected and handled it.
+                                    if (exceptionsDisconnect)
+                                    {
+                                        Debug.LogError($"NetworkClient: failed to unpack and invoke message. Disconnecting.");
+                                        connection.Disconnect();
+                                    }
+                                    else
+                                        Debug.LogWarning($"NetworkClient: failed to unpack and invoke message.");
+
+                                    return;
+                                }
+                            }
+                            // otherwise disconnect
+                            else
+                            {
                                 if (exceptionsDisconnect)
                                 {
-                                    Debug.LogError($"NetworkClient: failed to unpack and invoke message. Disconnecting.");
+                                    Debug.LogError($"NetworkClient: received Message was too short (messages should start with message id). Disconnecting.");
                                     connection.Disconnect();
                                 }
                                 else
-                                    Debug.LogWarning($"NetworkClient: failed to unpack and invoke message.");
-
+                                    Debug.LogWarning("NetworkClient: received Message was too short (messages should start with message id)");
                                 return;
                             }
                         }
-                        // otherwise disconnect
-                        else
-                        {
-                            if (exceptionsDisconnect)
-                            {
-                                Debug.LogError($"NetworkClient: received Message was too short (messages should start with message id). Disconnecting.");
-                                connection.Disconnect();
-                            }
-                            else
-                                Debug.LogWarning("NetworkClient: received Message was too short (messages should start with message id)");
-                            return;
-                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    // malformed batch: invalid varint, message size > remaining, etc.
+                    // unbatcher already cleared batches when it detected the error.
+                    Debug.LogError($"NetworkClient: failed to parse batch: {e.Message}. Disconnecting.");
+                    connection.Disconnect();
+                    return;
                 }
 
                 // if we weren't interrupted by a scene change,
@@ -421,6 +436,10 @@ namespace Mirror
                 if (!isLoadingScene && unbatcher.BatchesCount > 0)
                 {
                     Debug.LogError($"Still had {unbatcher.BatchesCount} batches remaining after processing, even though processing was not interrupted by a scene change. This should never happen, as it would cause ever growing batches.\nPossible reasons:\n* A message didn't deserialize as much as it serialized\n*There was no message handler for a message id, so the reader wasn't read until the end.");
+
+                    // disconnect and clear to prevent memory leak / queue growth
+                    unbatcher.Clear();
+                    connection.Disconnect();
                 }
             }
             else Debug.LogError("Skipped Data message handling because connection is null.");
@@ -453,6 +472,7 @@ namespace Mirror
             ready = false;
             snapshots.Clear();
             localTimeline = 0;
+            localTimelineScaled = 0;
 
             // now that everything was handled, clear the connection.
             // previously this was done in Disconnect() already, but we still
@@ -1509,14 +1529,6 @@ namespace Mirror
 
         static void OnEntityStateMessageUnreliableDelta(EntityStateMessageUnreliableDelta message, int channelId)
         {
-            // safety check: deltas should always arrive over Unreliable channel.
-            // WebGL forces all messages to Reliable, so don't flood errors or break for that platform.
-            if (!Utils.IsWebGL && channelId != Channels.Unreliable)
-            {
-                Debug.LogError($"Client OnEntityStateMessageUnreliableDelta arrived on channel {channelId} instead of Unreliable. This should never happen!");
-                return;
-            }
-
             // Debug.Log($"NetworkClient.OnUpdateVarsMessage {msg.netId}");
             if (spawned.TryGetValue(message.netId, out NetworkIdentity identity) && identity != null)
             {
@@ -1731,9 +1743,9 @@ namespace Mirror
             {
                 // only recalculate every few seconds
                 // we don't want to fire Good->Bad->Good->Bad dozens of times per second.
-                if (connectionQualityInterval > 0 && NetworkTime.time > lastConnectionQualityUpdate + connectionQualityInterval)
+                if (connectionQualityInterval > 0 && NetworkTime.unscaledTime > lastConnectionQualityUpdate + connectionQualityInterval)
                 {
-                    lastConnectionQualityUpdate = NetworkTime.time;
+                    lastConnectionQualityUpdate = NetworkTime.unscaledTime;
 
                     switch (connectionQualityMethod)
                     {
@@ -1794,7 +1806,7 @@ namespace Mirror
             if (NetworkServer.active) return;
 
             // send time snapshot every sendInterval.
-            Send(new TimeSnapshotMessage(), Channels.Unreliable);
+            Send(new TimeSnapshotMessage { scaledTime = NetworkTime.localScaledTime }, Channels.Unreliable);
 
             // broadcast client state to server
             BroadcastToServer(unreliableBaselineElapsed);

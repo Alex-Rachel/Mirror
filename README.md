@@ -16,9 +16,9 @@
 ![mmos_conceptart](https://github.com/user-attachments/assets/a95f2229-2f07-4c8c-9245-93a5e8004b7d)
 
 ## Mirror Networking 
-The **#1** free **open source** game networking library for **Unity 2019 / 2020 / 2021 / 2022 / 6**.
+The **#1** free **open source** game networking library for **Unity**, used by over 200 million players.
 
-Used **in production** by major hits like [**Population: ONE**](https://www.populationonevr.com/) and over [**1000 Steam Games**](https://steamdb.info/tech/SDK/Mirror/?sort=rating_desc).
+**Powering** major hits like [**Population: ONE**](https://www.populationonevr.com/) and over [**1000 Steam Games**](https://steamdb.info/tech/SDK/Mirror/?sort=rating_desc).
 
 Originally based on [**UNET**](https://web.archive.org/web/20230915050929/https://blog.unity.com/technology/announcing-unet-new-unity-multiplayer-technology): battle tested **since 2014** for 10 years and counting!
 
