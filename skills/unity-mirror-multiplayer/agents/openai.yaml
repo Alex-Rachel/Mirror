@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Mirror 联机改造"
+  short_description: "将 Unity 项目按 Mirror 规范改造为联机并执行自动化验收"
+  default_prompt: "使用 $unity-mirror-multiplayer 将指定 Unity 项目改造为完整联机模式；存在 Packages/com.unity.pipeline 时必须执行自动化测试并报告证据。"
