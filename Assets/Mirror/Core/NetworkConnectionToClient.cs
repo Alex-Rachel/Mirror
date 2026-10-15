@@ -60,9 +60,10 @@ namespace Mirror
         /// <summary>Round trip time (in seconds) that it takes a message to go server->client->server.</summary>
         public double rtt => _rtt.Value;
 
-        internal NetworkConnectionToClient() : base() { }
+        // Used by Unity serialization, not by runtime connection creation.
+        internal NetworkConnectionToClient() : base(false) { }
 
-        public NetworkConnectionToClient(int networkConnectionId, string clientAddress = "localhost") : base()
+        public NetworkConnectionToClient(int networkConnectionId, string clientAddress = "localhost") : base(true)
         {
             connectionId = networkConnectionId;
             address = clientAddress;

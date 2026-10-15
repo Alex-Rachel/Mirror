@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -58,12 +59,46 @@ namespace Mirror.Tests.NetworkConnections
         [Test]
         public void InternalConstructor_CreatesInstance()
         {
-            // internal NetworkConnectionToClient() : base() { } is used by Mirror
-            // internally.  connectionId and address are left at their type defaults
-            // because only the public constructor sets them.
+            // Unity's serialization-only constructor leaves runtime connection
+            // data at its defaults without accessing Unity APIs.
             NetworkConnectionToClient connection = new NetworkConnectionToClient();
             Assert.That(connection.connectionId, Is.EqualTo(0));
             Assert.That(connection.address, Is.Null);
+            Assert.That(connection.lastMessageTime, Is.Zero);
+        }
+
+        [Test]
+        public void SerializationConstructor_DoesNotCallUnityApis()
+        {
+            Exception exception = null;
+            NetworkConnectionToClient connection = null;
+            Thread thread = new Thread(() =>
+            {
+                try
+                {
+                    connection = new NetworkConnectionToClient();
+                }
+                catch (Exception caught)
+                {
+                    exception = caught;
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
+
+            Assert.That(thread.Join(5000), Is.True, "Serialization constructor did not finish.");
+            Assert.That(exception, Is.Null);
+            Assert.That(connection, Is.Not.Null);
+            Assert.That(connection.lastMessageTime, Is.Zero);
+        }
+
+        [Test]
+        public void RuntimeConstructors_InitializeLastMessageTime()
+        {
+            Assert.That(new NetworkConnectionToClient(1).lastMessageTime, Is.EqualTo(Time.time));
+            Assert.That(new NetworkConnectionToServer().lastMessageTime, Is.EqualTo(Time.time));
+            Assert.That(new LocalConnectionToClient().lastMessageTime, Is.EqualTo(Time.time));
+            Assert.That(new LocalConnectionToServer().lastMessageTime, Is.EqualTo(Time.time));
         }
 
         [Test]
@@ -119,7 +154,7 @@ namespace Mirror.Tests.NetworkConnections
         public void IsAlive_ReturnsTrueWithinTimeout()
         {
             NetworkConnectionToClient connection = new NetworkConnectionToClient(1);
-            // lastMessageTime is assigned Time.time in the constructor
+            // lastMessageTime is assigned Time.time in the runtime constructor.
             Assert.That(connection.IsAlive(60f), Is.True);
         }
 

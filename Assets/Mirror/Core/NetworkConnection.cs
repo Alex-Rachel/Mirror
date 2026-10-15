@@ -58,11 +58,14 @@ namespace Mirror
         //       different connections.
         public double remoteTimeStamp { get; internal set; }
 
-        internal NetworkConnection()
+        internal NetworkConnection() {}
+
+        internal NetworkConnection(bool initializeLastMessageTime)
         {
-            // set lastTime to current time when creating connection to make
-            // sure it isn't instantly kicked for inactivity
-            lastMessageTime = Time.time;
+            // Unity may invoke the serialization-only constructor outside the
+            // main thread. Only runtime connections should access Unity's clock.
+            if (initializeLastMessageTime)
+                lastMessageTime = Time.time;
         }
 
         // TODO if we only have Reliable/Unreliable, then we could initialize
