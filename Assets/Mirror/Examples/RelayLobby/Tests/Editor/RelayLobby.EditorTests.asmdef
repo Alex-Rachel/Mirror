@@ -1,0 +1,26 @@
+{
+    "name": "Mirror.Examples.RelayLobby.EditorTests",
+    "rootNamespace": "Mirror.Examples.RelayLobby.Tests",
+    "references": [
+        "GUID:30817c1a0e6d646d99c048fc403f5979",
+        "GUID:627104647b9c04b4ebb8978a92ecac63",
+        "GUID:fecf25954bb196642ab50657689761d6",
+        "Mirror.Components",
+        "Unity.ugui"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": []
+}

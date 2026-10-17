@@ -1,0 +1,5 @@
+{
+  "name": "Mirror.Examples.RelayLobby.Editor",
+  "references": ["Mirror", "Mirror.Components", "Mirror.Transports", "Mirror.Examples", "Unity.ugui"],
+  "includePlatforms": ["Editor"]
+}

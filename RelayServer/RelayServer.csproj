@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Mirror.RelayServer</AssemblyName>
+    <RootNamespace>Mirror.Relay.Server</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Assets\Mirror\Transports\Relay\RelayProtocol.cs" Link="RelayProtocol.cs" />
+  </ItemGroup>
+</Project>
