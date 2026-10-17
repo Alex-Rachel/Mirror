@@ -83,3 +83,5 @@ Thumbs.db
 Assets/Mirror/Tests/Editor/Weaver/*/CompilationLog.txt
 
 Build/
+
+Packages/com.unity.pipeline/
