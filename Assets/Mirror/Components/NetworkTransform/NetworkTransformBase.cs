@@ -445,6 +445,9 @@ namespace Mirror
 
         public virtual void Reset()
         {
+            // The editor invokes Reset before Awake when adding the component.
+            // Reliable ResetState reads target immediately.
+            if (target == null) target = transform;
             ResetState();
             // default to ClientToServer so this works immediately for users
             syncDirection = SyncDirection.ClientToServer;
