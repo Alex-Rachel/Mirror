@@ -1,9 +1,39 @@
 ---
 name: mirror-dev
-description: Mirror Networking for Unity 开发指导。提供 Attribute 决策树、代码模板、架构选型和最佳实践。触发场景：(1) 编写 Mirror 网络代码（NetworkBehaviour/SyncVar/Command/ClientRpc/TargetRpc），(2) 配置 NetworkManager/NetworkIdentity/Transport/AOI/NetworkTransform，(3) 使用 SyncList/SyncDictionary/SyncDirection/InterestManagement，(4) 实现 PredictedRigidbody/NetworkAnimator/自定义 NetworkMessage/NetworkAuthenticator，(5) 调试 NetworkServer/NetworkClient 问题，(6) 场景切换/Additive Scenes/NetworkRoomManager，(7) LagCompensator/NetworkDiscovery，(8) 自定义序列化/Weaver错误/带宽优化/NetworkTime，(9) Spawn/对象池/权威分配/生命周期，(10) NetworkReader/NetworkWriter/自定义读写，(11) 内置认证器/ConnectionQuality/性能分析，(12) 常见开发模式/代码模板。
+description: Mirror Networking for Unity 开发、调试与迁移指导；涵盖常规 Mirror 网络代码、Transport、权威/同步、Weaver，以及把旧项目改造成同时支持直连与 RelayLobby（HTTP 大厅 + UDP Relay + Mirror Host）的双模式。适用于 RelayNetworkManager/RelayKcpTransport、房间生命周期、旧 UDP 兼容和真实连接验收；不用于非 Mirror 网络栈或纯通用 Unity 工作。
 ---
 
 # Mirror Dev
+
+## 任务路由
+
+先判断请求属于哪一种模式，再只读取相关参考：
+
+| 请求信号 | 工作模式 | 必读参考 |
+| --- | --- | --- |
+| `NetworkBehaviour`、`SyncVar`、`Command`、`Rpc`、Weaver、AOI、Transform | 常规 Mirror 开发 | 对应现有 `references/` |
+| `RelayKcpTransport`、`RelayNetworkManager`、房间/大厅、邀请码、Relay 心跳 | RelayLobby 开发 | [relay-lobby.md](references/relay-lobby.md) |
+| “旧项目改造”“保留原有联机”“双模式”“兼容直连和 RelayLobby” | 双模式迁移 | [dual-mode-migration.md](references/dual-mode-migration.md)；必要时再读 [relay-lobby.md](references/relay-lobby.md) |
+| 仅需要旧 UDP `RelaySession.Create/Join` | Relay 兼容路径 | [relay-lobby.md](references/relay-lobby.md) 的兼容路径章节 |
+
+不要因为项目引用了 Relay 程序集就默认重写为大厅模式；先确认用户要的是新项目、旧项目迁移，还是只修复已有 Relay 连接。
+
+## 双模式总原则
+
+- **玩法共享，接入分流。** 网络对象、服务器权威规则、同步字段、场景和玩家预制体尽量共用；旧直连和 RelayLobby 只在会话编排、凭据来源、Transport 配置处分叉。
+- **一个会话只有一个活动 Transport。** 不要在 `NetworkClient` 或 `NetworkServer` 已经 active 时替换 `NetworkManager.transport`；切换模式必须先完整 Leave/Stop，再清理凭据，最后启动新模式。
+- **大厅不是玩法状态。** 房间名、容量、可加入、成员、邀请码、开始标志属于 Relay 控制面；玩家位置、生命值、得分和战斗结果仍由 Mirror 主机权威同步。
+- **Relay 凭据只经过会话管理器。** `ownerToken`、`memberToken`、`relayToken`、邀请信息不得写日志、截图报告、共享脚本或同步到客户端玩法对象。
+- **启动必须可回滚。** HTTP 分配成功但 Relay/Mirror 启动失败时，必须停止本地网络并释放房间；晚到的异步响应不能恢复已退出的会话。
+- **兼容是可验证的行为，不是保留旧类名。** 旧模式要继续通过原有地址/端口、认证、场景和重连/退出路径；RelayLobby 要额外验证公开/私密房间、成员隔离、开始后禁止加入和 Relay 心跳。
+
+## 最小工作流
+
+1. 读取项目实际导入的 Mirror 版本、当前入口场景、现有 `NetworkManager`、Transport、认证器、玩家预制体和测试；不要只根据 README 或另一个 Mirror checkout 推断 API。
+2. 先画出两条会话路径：旧直连的 `StartHost/StartClient`，以及 RelayLobby 的“创建/加入房间 → 应用凭据 → `StartHost/StartClient` → RelayReady → Mirror 连接”。
+3. 将模式选择与会话状态集中到一个管理器/门面；不要在 UI、玩家脚本和多个静态单例中各自保存连接状态。
+4. 只把模式差异注入传输和会话编排层；玩法 `NetworkBehaviour` 通过同一套服务器权威契约运行。
+5. 对每条路径执行编译、Weaver、真实 Transport 的 Host + 独立客户端、重复退出/重进和故障回滚验证。
 
 ## Attribute 决策树
 
@@ -83,6 +113,7 @@ public class MyNetObj : NetworkBehaviour
 | AOI 选型与配置 | [aoi.md](references/aoi.md) |
 | 内置认证器（Basic/Device/UniqueName/Timeout） | [authenticators.md](references/authenticators.md) |
 | NetworkReader/Writer/Pool/自定义序列化 | [reader-writer.md](references/reader-writer.md) |
+| RelayLobby 控制面、RelayKCP、凭据与心跳 | [relay-lobby.md](references/relay-lobby.md) |
 
 ### 高级主题
 
@@ -99,3 +130,4 @@ public class MyNetObj : NetworkBehaviour
 | 场景 | 读取 |
 |------|------|
 | 常见模式（Hook桥接/Struct变异/预测/对象池/场景传送门等） | [common-patterns.md](references/common-patterns.md) |
+| 旧项目保留直连并新增 RelayLobby 双模式 | [dual-mode-migration.md](references/dual-mode-migration.md) |

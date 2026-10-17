@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mirror Networking 与 RelayLobby"
+  short_description: "Mirror 开发、旧项目双模式迁移与 RelayLobby 接入指南"
+  default_prompt: "使用 $mirror-dev 分析或改造 Unity Mirror 项目；若涉及 RelayLobby 或保留旧直连，请按双模式迁移指南实现并验证两条会话路径。"
